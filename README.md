@@ -93,6 +93,42 @@ plt.show()
 ```
 The pie chart illustrates the breakdown of product categories, revealing their relative proportions within the dataset. Clothing is the most dominant category, accounting for a substantial 44.5% of the total. Following closely is Accessories at 31.8%. Footwear constitutes 15.4% of the product mix, while Outerwear represents the smallest proportion at 8.3%
 ![Product categories distribution](https://github.com/user-attachments/assets/f29ad360-e45b-4db8-97b5-920a48a8f712)
+This is the code used to calculate the total sales and create a chart to visualize it
+```
+#group by category and items purchased and sum the purchase amount
+total_sales = df.groupby(["Category", "Item Purchased"])["Purchase Amount (USD)"].sum().reset_index()
+#rename the column to make it clear
+total_sales.rename(columns={"Purchase Amount (USD)": "Total Sales (USD)"}, inplace=True)
+#sort the data for easier interpretation
+total_sales = total_sales.sort_values(by=["Category", "Total Sales (USD)"], ascending=[True, False])
+#display the results
+print(total_sales)
+#aggregrate sales by category
+category_sales = total_sales.groupby("Category")["Total Sales (USD)"].sum().reset_index()
+
+#plot the chart
+plt.figure(figsize=(10, 6))
+bars =plt.bar(category_sales["Category"], category_sales["Total Sales (USD)"], color = "skyblue")
+
+for bar in bars:
+    height = bar.get_height()
+    plt.text(
+        bar.get_x() + bar.get_width()/2,
+        height + 0.01 * height,
+        f"${height:,}",
+        ha = "center",
+        va = "bottom",
+        fontsize = 10
+    )
+plt.title("Total Sales by Category")
+plt.xlabel("Category")
+plt.ylabel("Total Sales (USD)")
+plt.xticks(rotation = 0)
+plt.show()
+```
+
+![Total sales by category](https://github.com/user-attachments/assets/472e9ccf-9623-491f-8807-178e57a7a7ff)
+
 ### Purchase amount distribution
 This is the code used;
 ```
